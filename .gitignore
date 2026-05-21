@@ -29,3 +29,6 @@ Thumbs.db
 # Cloudflare Pages / Vite cache
 .wrangler/
 .vite/
+
+# TypeScript incremental build cache (machine-specific)
+*.tsbuildinfo
