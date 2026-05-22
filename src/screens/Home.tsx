@@ -20,41 +20,41 @@ export function Home({ onStart, onOpenParent }: Props) {
     (a, b) => a + b,
     0
   );
-  const wordsRead = (Object.values(progress.totalWordsRead) as number[]).reduce(
-    (a, b) => a + b,
-    0
-  );
 
   const milestones = [
-    { id: 'first', label: 'First story', emoji: '📖', unlocked: storiesRead >= 1 },
-    { id: 'three', label: '3 stories', emoji: '🌱', unlocked: storiesRead >= 3 },
-    { id: 'ten', label: '10 stories', emoji: '🌳', unlocked: storiesRead >= 10 },
-    { id: 'multi', label: 'All 3 languages', emoji: '🌍', unlocked:
-        (Object.values(progress.storiesCompleted) as number[]).filter((n) => n > 0).length >= 3 },
-    { id: 's3', label: '3-day streak', emoji: '🔥', unlocked: streak >= 3 },
-    { id: 's7', label: '7-day streak', emoji: '✨', unlocked: streak >= 7 },
-    { id: 'hour', label: '60 minutes read', emoji: '🎉', unlocked: minutesAllLangs >= 60 },
+    { id: 'first', label: 'First story', unlocked: storiesRead >= 1 },
+    { id: 'three', label: '3 stories', unlocked: storiesRead >= 3 },
+    { id: 'ten', label: '10 stories', unlocked: storiesRead >= 10 },
+    {
+      id: 'multi',
+      label: 'All 3 languages',
+      unlocked:
+        (Object.values(progress.storiesCompleted) as number[]).filter((n) => n > 0).length >= 3,
+    },
+    { id: 's3', label: '3-day streak', unlocked: streak >= 3 },
+    { id: 's7', label: '7-day streak', unlocked: streak >= 7 },
+    { id: 'hour', label: '60 minutes read', unlocked: minutesAllLangs >= 60 },
   ];
+  const earned = milestones.filter((m) => m.unlocked).length;
 
-  const greeting = storiesRead === 0
-    ? 'Welcome! Pick a story and read it out loud — I’ll follow along with you.'
-    : 'Pick up where you left off, or try a new story.';
+  const greeting =
+    storiesRead === 0
+      ? 'Welcome. Pick a book and read it out loud — the words light up as you go.'
+      : 'Pick up where you left off, or open a new book.';
 
   return (
     <div className="screen stack">
       <div className="row between">
-        <h1>📚 Story Reader</h1>
-        <button className="icon ghost" onClick={onOpenParent} aria-label="Parent settings">
-          ⚙
+        <h1>Story Reader</h1>
+        <button className="ghost" onClick={onOpenParent}>
+          Parent
         </button>
       </div>
 
-      <p className="muted" style={{ margin: 0, fontSize: '1.05rem' }}>
-        {greeting}
-      </p>
+      <p className="muted" style={{ margin: 0, fontSize: '1.05rem' }}>{greeting}</p>
 
       <div className="card stack-sm">
-        <div className="muted" style={{ fontSize: '0.85rem' }}>Today’s language</div>
+        <div className="muted" style={{ fontSize: '0.85rem' }}>Today's language</div>
         <div className="lang-pills">
           {LANGUAGES.map((l) => (
             <button
@@ -69,24 +69,20 @@ export function Home({ onStart, onOpenParent }: Props) {
       </div>
 
       <div className="row" style={{ gap: '0.8rem' }}>
-        <div className="card" style={{ flex: 1 }}>
-          <div className="muted" style={{ fontSize: '0.85rem' }}>Streak</div>
-          <div className="streak" style={{ fontSize: '1.7rem' }}>
-            <span>🔥</span> {streak} {streak === 1 ? 'day' : 'days'}
-          </div>
-          {progress.streak.graceTokens > 0 && streak > 0 && (
-            <div className="muted" style={{ fontSize: '0.78rem' }}>
-              {progress.streak.graceTokens} grace day{progress.streak.graceTokens === 1 ? '' : 's'} saved
-            </div>
-          )}
+        <div className="card stat-card">
+          <div className="muted stat-label">Streak</div>
+          <div className="stat-value">{streak}</div>
+          <div className="muted stat-unit">{streak === 1 ? 'day' : 'days'} in a row</div>
         </div>
-        <div className="card" style={{ flex: 1 }}>
-          <div className="muted" style={{ fontSize: '0.85rem' }}>Stories read</div>
-          <div style={{ fontSize: '1.7rem', fontWeight: 600 }}>{storiesRead}</div>
+        <div className="card stat-card">
+          <div className="muted stat-label">Stories read</div>
+          <div className="stat-value">{storiesRead}</div>
+          <div className="muted stat-unit">all languages</div>
         </div>
-        <div className="card" style={{ flex: 1 }}>
-          <div className="muted" style={{ fontSize: '0.85rem' }}>Minutes</div>
-          <div style={{ fontSize: '1.7rem', fontWeight: 600 }}>{Math.round(minutesAllLangs)}</div>
+        <div className="card stat-card">
+          <div className="muted stat-label">Minutes</div>
+          <div className="stat-value">{Math.round(minutesAllLangs)}</div>
+          <div className="muted stat-unit">time reading</div>
         </div>
       </div>
 
@@ -107,12 +103,13 @@ export function Home({ onStart, onOpenParent }: Props) {
       </div>
 
       <div className="card stack-sm">
-        <div className="muted" style={{ fontSize: '0.85rem' }}>Badges earned</div>
+        <div className="muted" style={{ fontSize: '0.85rem' }}>
+          Badges — {earned} of {milestones.length} earned
+        </div>
         <div className="badge-row">
           {milestones.map((m) => (
-            <div key={m.id} className={`badge ${m.unlocked ? '' : 'locked'}`}>
-              <span style={{ fontSize: '1.2em' }}>{m.emoji}</span>
-              <span>{m.label}</span>
+            <div key={m.id} className={`badge ${m.unlocked ? 'earned' : 'locked'}`}>
+              {m.label}
             </div>
           ))}
         </div>
@@ -125,7 +122,7 @@ export function Home({ onStart, onOpenParent }: Props) {
         style={{ fontSize: '1.25rem', padding: '1em 1.4em' }}
         onClick={onStart}
       >
-        Open a book →
+        Go to the bookshelf →
       </button>
     </div>
   );

@@ -6,7 +6,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'es-mochi-a-medianoche',
     tier: 1,
     title: 'Mochi a medianoche',
-    emoji: '🐱',
+    cover: 'cat-night',
     accent: '#7a5a3a',
     paragraphs: [
       'Toda la casa dormía. Las luces estaban apagadas y las cortinas cerradas. Mochi la gatita abrió sus grandes ojos verdes. Era la hora de su aventura secreta de medianoche.',
@@ -38,7 +38,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'es-el-barco-de-papel',
     tier: 2,
     title: 'El barco de papel',
-    emoji: '⛵',
+    cover: 'paper-boat',
     accent: '#3a6a9a',
     paragraphs: [
       'Cuando por fin paró de llover, Teo salió a la calle con sus botas amarillas nuevas y un pequeño barco de papel plegado. El barco tenía una vela azul muy alta, dibujada con mucho cuidado por su abuela con un rotulador. La calle estaba llena de charcos, pero Teo tenía un plan mucho más grande en mente.',
@@ -72,7 +72,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'es-el-telescopio-del-abuelo',
     tier: 2,
     title: 'El telescopio del abuelo',
-    emoji: '🔭',
+    cover: 'telescope',
     accent: '#3d3a6e',
     paragraphs: [
       'Era la noche favorita de Maya en todo el año. Cada mes de julio, se quedaba a dormir en la pequeña casa del abuelo, en la colina, y siempre hacían juntos la misma cosa maravillosa.',
@@ -114,7 +114,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'es-el-aprendiz-del-faro',
     tier: 3,
     title: 'El aprendiz del faro',
-    emoji: '💡',
+    cover: 'lighthouse',
     accent: '#a85d2e',
     paragraphs: [
       'Sam visitaba el viejo faro cada verano. El guardián, el señor Brennan, tenía cejas blancas y espesas, ojos marrones muy amables, y una risa que sonaba un poco como el chirrido de una puerta. Llevaba cuidando la gran luz desde hacía treinta y seis años.',
@@ -153,7 +153,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'es-el-zorro-y-el-guante',
     tier: 1,
     title: 'El zorro y el guante',
-    emoji: '🦊',
+    cover: 'fox-snow',
     accent: '#b86a4d',
     paragraphs: [
       'Nevaba suavemente en el bosque. Una pequeña zorra roja, que se llamaba Pim, buscaba algo de comer. Sus patas dejaban pequeñas huellas en la nieve recién caída.',
@@ -191,7 +191,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'es-el-caracol-del-jardin',
     tier: 1,
     title: 'El caracol del jardín',
-    emoji: '🌱',
+    cover: 'snail-garden',
     accent: '#5f8a4d',
     paragraphs: [
       'Lila adoraba el jardín de su abuela. Había fresas, tomates rojos, y altos girasoles amarillos que giraban su cara para seguir al sol.',
@@ -222,7 +222,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'es-el-dibujo-que-cobro-vida',
     tier: 2,
     title: 'El dibujo que cobró vida',
-    emoji: '🎨',
+    cover: 'drawing',
     accent: '#7a4a9a',
     paragraphs: [
       'Era un sábado lluvioso, y Ben no tenía nada que hacer. Estaba sentado a la mesa de la cocina con su viejo lápiz de madera y una hoja blanca recién sacada. Fuera, la lluvia golpeaba la ventana como un tambor adormilado.',
@@ -260,7 +260,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'es-una-botella-en-el-mar',
     tier: 3,
     title: 'Una botella en el mar',
-    emoji: '💌',
+    cover: 'bottle-sea',
     accent: '#3590a8',
     paragraphs: [
       'Sofía vivía en un pueblo pequeño junto al mar, con calles empinadas, casas blancas y contraventanas de un azul brillante. Cada mañana antes del colegio, bajaba hasta el puerto para mirar el agua.',
@@ -299,6 +299,87 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
           'Su tío, como una broma',
         ],
         correctIndex: 1,
+      },
+    ],
+  },
+  {
+    id: 'es-mi-perrito',
+    tier: 0,
+    title: 'Mi perrito',
+    cover: 'dog',
+    accent: '#9a7b4f',
+    paragraphs: [
+      'Tengo un perrito. Se llama Mancha.',
+      'Mancha es marrón y blanco. Tiene orejas suaves y una cola alegre.',
+      'Mancha puede correr. Mancha puede saltar. Mancha puede sentarse cuando se lo pido.',
+      'Le gusta jugar en el parque. Le gusta jugar conmigo.',
+      'Por la noche, Mancha duerme en mi cama. Es calentito y suave.',
+      'Quiero a mi perrito. Y mi perrito me quiere a mí.',
+    ],
+    comprehension: [
+      {
+        q: '¿Cómo se llama el perro?',
+        options: ['Mancha', 'Max', 'Toby'],
+        correctIndex: 0,
+      },
+      {
+        q: '¿Dónde duerme Mancha por la noche?',
+        options: ['En el parque', 'En mi cama', 'En una caja'],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    id: 'es-la-gran-manzana-roja',
+    tier: 0,
+    title: 'La gran manzana roja',
+    cover: 'apple',
+    accent: '#b1493f',
+    paragraphs: [
+      'Aquí hay una gran manzana roja. La manzana es redonda y brillante.',
+      'La manzana es dulce. Huele muy bien.',
+      'Mamá corta la manzana con un cuchillo. Ahora hay cuatro trozos.',
+      'Me da un trozo a mí. Le da un trozo a papá.',
+      'Le da un trozo a mi hermana. Ella guarda un trozo también.',
+      'Comemos la manzana todos juntos. La gran manzana roja está rica.',
+    ],
+    comprehension: [
+      {
+        q: '¿De qué color es la manzana?',
+        options: ['Verde', 'Roja', 'Amarilla'],
+        correctIndex: 1,
+      },
+      {
+        q: '¿Cuántos trozos cortó mamá?',
+        options: ['Dos', 'Cuatro', 'Seis'],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    id: 'es-un-dia-de-sol',
+    tier: 0,
+    title: 'Un día de sol',
+    cover: 'sun',
+    accent: '#d99a2b',
+    paragraphs: [
+      'Hoy hace sol. El cielo es grande y azul.',
+      'El sol es cálido y brillante. Me siento feliz.',
+      'Me pongo el sombrero. Salgo a jugar.',
+      'Corro sobre la hierba verde y suave. Salto muy alto.',
+      'Un pajarito canta en un árbol. El pájaro parece contento.',
+      'Yo canto con el pájaro. ¡Qué bonito día de sol!',
+    ],
+    comprehension: [
+      {
+        q: '¿Qué tiempo hace hoy?',
+        options: ['Llueve', 'Hace sol', 'Nieva'],
+        correctIndex: 1,
+      },
+      {
+        q: '¿Quién canta en el árbol?',
+        options: ['Un pájaro', 'Un gato', 'El viento'],
+        correctIndex: 0,
       },
     ],
   },

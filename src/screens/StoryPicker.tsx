@@ -4,17 +4,24 @@ import { useSettings } from '../state/SettingsContext';
 import { useProgress } from '../state/ProgressContext';
 import { speak, cancelSpeak } from '../lib/tts';
 import { generateStory } from '../lib/ai';
-import type { Story, Tier } from '../types';
+import { BookCover } from '../components/BookCover';
+import { TIERS, type Story, type Tier } from '../types';
 
 interface Props {
   onBack: () => void;
   onPick: (story: Story) => void;
 }
 
-function estimatedMinutes(wordCount: number, wpm = 95): string {
+function estimatedMinutes(wordCount: number, wpm = 80): string {
   const m = wordCount / wpm;
-  if (m < 1) return '<1 min';
+  if (m < 1.2) return '1 min';
   return `${Math.round(m)} min`;
+}
+
+function chunk<T>(arr: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < arr.length; i += size) out.push(arr.slice(i, i + size));
+  return out;
 }
 
 export function StoryPicker({ onBack, onPick }: Props) {
@@ -26,14 +33,17 @@ export function StoryPicker({ onBack, onPick }: Props) {
   const [aiStories, setAiStories] = useState<Story[]>([]);
   const [aiError, setAiError] = useState<string | null>(null);
 
-  const allStories = useMemo<Story[]>(() => {
-    return [...aiStories, ...storiesFor(settings.language)];
-  }, [aiStories, settings.language]);
+  const allStories = useMemo<Story[]>(
+    () => [...aiStories, ...storiesFor(settings.language)],
+    [aiStories, settings.language]
+  );
 
   const filtered = useMemo(
-    () => (filterTier ? allStories.filter((s) => s.tier === filterTier) : allStories),
+    () => (filterTier == null ? allStories : allStories.filter((s) => s.tier === filterTier)),
     [allStories, filterTier]
   );
+
+  const shelves = useMemo(() => chunk(filtered, 3), [filtered]);
 
   const handlePreview = async (s: Story) => {
     if (previewing === s.id) {
@@ -42,8 +52,7 @@ export function StoryPicker({ onBack, onPick }: Props) {
       return;
     }
     setPreviewing(s.id);
-    const sample = s.paragraphs[0];
-    await speak(sample, s.language, 0.9);
+    await speak(s.paragraphs[0], s.language, 0.9);
     setPreviewing(null);
   };
 
@@ -52,14 +61,13 @@ export function StoryPicker({ onBack, onPick }: Props) {
       setAiError('Add an Anthropic API key in Parent settings first.');
       return;
     }
-    const tier = filterTier ?? 2;
     setAiError(null);
     setGenerating(true);
     try {
       const s = await generateStory({
         apiKey: settings.anthropicApiKey,
         language: settings.language,
-        tier,
+        tier: filterTier ?? 1,
       });
       setAiStories((prev) => [s, ...prev]);
     } catch (e: any) {
@@ -73,88 +81,94 @@ export function StoryPicker({ onBack, onPick }: Props) {
     <div className="screen stack">
       <div className="row between">
         <button className="ghost" onClick={onBack}>← Back</button>
-        <h1 style={{ margin: 0 }}>Pick a story</h1>
+        <h1 style={{ margin: 0 }}>The Bookshelf</h1>
         <div style={{ width: 60 }} />
       </div>
 
-      <div className="row">
-        <span className="muted">Difficulty:</span>
+      <div className="row" style={{ rowGap: '0.4rem' }}>
         <div className="lang-pills">
           <button className={filterTier == null ? 'active' : ''} onClick={() => setFilterTier(null)}>
-            All
+            All books
           </button>
-          <button className={filterTier === 1 ? 'active' : ''} onClick={() => setFilterTier(1)}>
-            <span className="tier-dot t1" /> Just starting
-          </button>
-          <button className={filterTier === 2 ? 'active' : ''} onClick={() => setFilterTier(2)}>
-            <span className="tier-dot t2" /> Stretching
-          </button>
-          <button className={filterTier === 3 ? 'active' : ''} onClick={() => setFilterTier(3)}>
-            <span className="tier-dot t3" /> Challenge
-          </button>
+          {TIERS.map((t) => (
+            <button
+              key={t.tier}
+              className={filterTier === t.tier ? 'active' : ''}
+              onClick={() => setFilterTier(t.tier)}
+            >
+              <span className={`tier-dot t${t.tier}`} /> {t.label}
+            </button>
+          ))}
         </div>
       </div>
 
-      <div className="story-grid">
-        {filtered.map((s) => {
-          const best = progress.personalBests[s.id];
-          const reads = progress.sessions.filter((sess) => sess.storyId === s.id).length;
-          const accent = s.accent ?? 'var(--accent)';
-          return (
-            <div
-              key={s.id}
-              className="story-card"
-              role="button"
-              tabIndex={0}
-              onClick={() => onPick(s)}
-              onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onPick(s)}
-              style={{ borderLeftColor: accent }}
-            >
-              <div className="story-card__top">
-                <span className="story-card__emoji" aria-hidden="true">{s.emoji ?? '📖'}</span>
-                <div>
-                  <div className="story-card__title">{s.title}</div>
-                  <div className="story-card__meta">
-                    <span className={`tier-dot t${s.tier}`} />
-                    <span>{estimatedMinutes(s.wordCount)}</span>
-                    <span>·</span>
-                    <span>{s.wordCount} words</span>
-                    {s.source === 'ai' && <span style={{ color: 'var(--accent)' }}>· ✨ AI</span>}
+      <div className="bookshelf">
+        {shelves.map((row, ri) => (
+          <div className="shelf" key={ri}>
+            <div className="shelf__books">
+              {row.map((s) => {
+                const best = progress.personalBests[s.id];
+                const reads = progress.sessions.filter((x) => x.storyId === s.id).length;
+                const accent = s.accent ?? 'var(--accent)';
+                return (
+                  <div
+                    key={s.id}
+                    className="book"
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => onPick(s)}
+                    onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onPick(s)}
+                  >
+                    <div className="book__block" style={{ ['--accent' as any]: accent }}>
+                      <div className="book__spine" />
+                      <div className="book__cover">
+                        <BookCover cover={s.cover} />
+                        <div className="book__scrim" />
+                        <div className="book__title">{s.title}</div>
+                        {reads > 0 && <div className="book__ribbon" title="You have read this" />}
+                      </div>
+                      <div className="book__pages" />
+                    </div>
+                    <div className="book__stats">
+                      <span className={`tier-dot t${s.tier}`} />
+                      <span>{estimatedMinutes(s.wordCount)}</span>
+                      <span className="dotsep">·</span>
+                      <span>{s.wordCount} words</span>
+                      {s.source === 'ai' && <span className="ai-tag">new</span>}
+                    </div>
+                    <div className="book__sub">
+                      <button
+                        className="ghost listen-btn"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handlePreview(s);
+                        }}
+                      >
+                        {previewing === s.id ? '■ Stop' : '▸ Listen'}
+                      </button>
+                      {reads > 0 && (
+                        <span className="muted">
+                          Read {reads}×{best ? ` · best ${Math.round(best.wpm)} wpm` : ''}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="row" style={{ marginTop: '0.5rem' }}>
-                <button
-                  className="ghost"
-                  style={{ fontSize: '0.8rem', padding: '0.3em 0.7em' }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePreview(s);
-                  }}
-                >
-                  {previewing === s.id ? '⏸ Stop' : '🔊 Hear a sample'}
-                </button>
-                {reads > 0 && (
-                  <span className="story-card__best">
-                    Read {reads} {reads === 1 ? 'time' : 'times'}
-                  </span>
-                )}
-              </div>
-              {best && (
-                <div className="story-card__best">
-                  ⭐ Fastest: {Math.round(best.wpm)} wpm
-                </div>
-              )}
+                );
+              })}
             </div>
-          );
-        })}
+            <div className="shelf__plank" />
+          </div>
+        ))}
+        {filtered.length === 0 && (
+          <p className="muted" style={{ textAlign: 'center' }}>No books in this section yet.</p>
+        )}
       </div>
 
       {settings.anthropicApiKey && (
         <div className="card stack-sm">
           <div className="row between">
             <div>
-              <div style={{ fontWeight: 600 }}>✨ Want a brand-new story?</div>
+              <div style={{ fontWeight: 600 }}>Want a brand-new story?</div>
               <div className="muted" style={{ fontSize: '0.85rem' }}>
                 I'll write one just for today, at your chosen difficulty.
               </div>

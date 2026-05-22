@@ -8,6 +8,7 @@ import {
 } from 'react';
 import type { SessionResult, Story } from '../types';
 import { tokenizeStory } from '../lib/words';
+import { useSettings } from '../state/SettingsContext';
 
 interface Props {
   story: Story;
@@ -22,9 +23,10 @@ function formatClock(s: number): string {
 }
 
 export function Reader({ story, onFinish, onExit }: Props) {
+  const { settings } = useSettings();
   const words = useMemo(() => tokenizeStory(story.paragraphs), [story]);
 
-  const [speedWpm, setSpeedWpm] = useState(100);
+  const [speedWpm, setSpeedWpm] = useState(settings.defaultSpeedWpm);
   const [paused, setPaused] = useState(true);
   const [started, setStarted] = useState(false);
   const [elapsedMs, setElapsedMs] = useState(0);
@@ -40,14 +42,9 @@ export function Reader({ story, onFinish, onExit }: Props) {
   const totalWords = words.length;
   const accent = story.accent ?? 'var(--accent)';
 
-  // Measure the rendered content height once after layout so we can calibrate
-  // scroll rate to "words per second × pixels per word." This keeps the
-  // highlighted word at a consistent on-screen position throughout the read,
-  // even though the scroll is purely time-based and continuous.
   useLayoutEffect(() => {
     if (!scrollRef.current || totalWords === 0) return;
-    const h = scrollRef.current.scrollHeight;
-    setPxPerWord(h / totalWords);
+    setPxPerWord(scrollRef.current.scrollHeight / totalWords);
   }, [story, totalWords]);
 
   const begin = useCallback(() => {
@@ -59,9 +56,7 @@ export function Reader({ story, onFinish, onExit }: Props) {
   const togglePause = useCallback(() => {
     setPaused((p) => {
       const willPause = !p;
-      if (!willPause) {
-        startedAtRef.current = performance.now() - elapsedMs;
-      }
+      if (!willPause) startedAtRef.current = performance.now() - elapsedMs;
       return willPause;
     });
   }, [elapsedMs]);
@@ -74,7 +69,7 @@ export function Reader({ story, onFinish, onExit }: Props) {
     finishedRef.current = true;
     const durationSec = Math.max(elapsedRef.current / 1000, 1);
     const wpm = (totalWords / durationSec) * 60;
-    const result: SessionResult = {
+    onFinish({
       storyId: story.id,
       language: story.language,
       tier: story.tier,
@@ -84,25 +79,18 @@ export function Reader({ story, onFinish, onExit }: Props) {
       compCorrect: 0,
       compTotal: story.comprehension.length,
       timestamp: Date.now(),
-    };
-    onFinish(result);
+    });
   }, [totalWords, story, onFinish]);
 
   const handleFinishRef = useRef(handleFinish);
   useEffect(() => { handleFinishRef.current = handleFinish; }, [handleFinish]);
 
-  // Smooth, constant-rate teleprompter loop. Scroll position is a linear
-  // function of elapsed time; rate is calibrated so the highlight stays in the
-  // same on-screen reading band throughout. The highlight word index advances
-  // discretely per word interval.
+  // Smooth, constant-rate teleprompter loop.
   useEffect(() => {
     if (!started || paused || finishedRef.current) return;
-    if (pxPerWord === 0) return; // wait for layout measurement
+    if (pxPerWord === 0) return;
     let raf = 0;
     let canceled = false;
-    // Base rate matches word advancement (highlight would stay at containerTop).
-    // Add a modest over-scroll so text drifts upward through the viewport over
-    // the read — gives the teleprompter eye-tracking feel.
     const OVERSCROLL = 1.22;
     const pxPerSec = (speedWpm / 60) * pxPerWord * OVERSCROLL;
     const tick = () => {
@@ -112,63 +100,40 @@ export function Reader({ story, onFinish, onExit }: Props) {
       const elapsedSec = elapsed / 1000;
       setElapsedMs(elapsed);
 
-      const wordPosFloat = elapsedSec * (speedWpm / 60);
-      const idx = Math.min(totalWords, Math.floor(wordPosFloat));
+      const idx = Math.min(totalWords, Math.floor(elapsedSec * (speedWpm / 60)));
       setCurrentIdx(idx);
-
       if (idx >= totalWords) {
         handleFinishRef.current();
         return;
       }
-
-      // Direct DOM write — bypassing React state for the per-frame transform
-      // gives us frame-accurate smoothness without batching delays.
-      const scrollPx = pxPerSec * elapsedSec;
       if (scrollRef.current) {
-        scrollRef.current.style.transform = `translate(-50%, ${-scrollPx}px)`;
+        scrollRef.current.style.transform = `translate(-50%, ${-(pxPerSec * elapsedSec)}px)`;
       }
-
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => {
-      canceled = true;
-      cancelAnimationFrame(raf);
-    };
+    return () => { canceled = true; cancelAnimationFrame(raf); };
   }, [started, paused, speedWpm, totalWords, pxPerWord]);
-
-  const handleStop = () => {
-    onExit();
-  };
 
   const progressPct = totalWords > 0 ? (currentIdx / totalWords) * 100 : 0;
 
   return (
     <div className="reader" style={{ ['--story-accent' as any]: accent }}>
       <div className="reader__topbar">
-        <button className="ghost" onClick={handleStop} aria-label="Exit reading">
+        <button className="ghost" onClick={onExit} aria-label="Exit reading">
           ← Stop
         </button>
         <div className="reader__center">
-          <div className="reader__title">{story.emoji} {story.title}</div>
+          <div className="reader__title">{story.title}</div>
           <div className="reader__timer" aria-label="Timer">
             {formatClock(elapsedMs / 1000)}
           </div>
         </div>
         <div className="reader__controls">
           {started ? (
-            <>
-              <button onClick={handleFinish} title="Finish reading">
-                ✓ Done
-              </button>
-              <button className="primary" onClick={togglePause}>
-                {paused ? '▶ Resume' : '⏸ Pause'}
-              </button>
-            </>
+            <button onClick={handleFinish} title="Finish reading">Done</button>
           ) : (
-            <button className="primary" onClick={begin}>
-              ▶ Start reading
-            </button>
+            <button className="primary" onClick={begin}>Start reading</button>
           )}
         </div>
       </div>
@@ -206,22 +171,50 @@ export function Reader({ story, onFinish, onExit }: Props) {
         </div>
       </div>
 
-      <div className="reader__bottombar">
-        <div className="reader__progress" aria-label="Progress">
-          <div className="reader__progress-fill" style={{ width: `${progressPct}%` }} />
+      {/* Vertical progress bar — right edge */}
+      <div className="reader__vprogress" aria-label="Progress through the story">
+        <div className="reader__vprogress-fill" style={{ height: `${progressPct}%` }} />
+      </div>
+
+      {/* Centered pause control — large, thumb-reachable */}
+      {started && !paused && (
+        <button
+          className="reader__pause-fab"
+          onClick={togglePause}
+          aria-label="Pause"
+        >
+          <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
+            <rect x="5" y="4" width="5" height="16" rx="2" fill="currentColor" />
+            <rect x="14" y="4" width="5" height="16" rx="2" fill="currentColor" />
+          </svg>
+        </button>
+      )}
+
+      {/* Paused overlay */}
+      {started && paused && (
+        <div className="reader__paused" onClick={togglePause}>
+          <button className="reader__resume" aria-label="Resume reading">
+            <svg viewBox="0 0 24 24" width="44" height="44" aria-hidden="true">
+              <path d="M7 4 L20 12 L7 20 Z" fill="currentColor" />
+            </svg>
+          </button>
+          <div className="reader__paused-label">Paused — tap to keep reading</div>
         </div>
+      )}
+
+      <div className="reader__bottombar">
         <div className="reader__speed">
-          <span aria-hidden="true">🐢</span>
+          <span>Slower</span>
           <input
             type="range"
-            min={60}
-            max={180}
+            min={30}
+            max={160}
             step={5}
             value={speedWpm}
             onChange={(e) => setSpeedWpm(Number(e.target.value))}
             aria-label="Reading speed"
           />
-          <span aria-hidden="true">🐇</span>
+          <span>Faster</span>
         </div>
       </div>
     </div>

@@ -14,6 +14,11 @@ const LANG_NAME: Record<Language, string> = {
 };
 
 const TIER_GUIDANCE: Record<Tier, { wordCount: string; complexity: string }> = {
+  0: {
+    wordCount: '40 to 70 words total, in 5 or 6 very short lines',
+    complexity:
+      'use only the most common first-reader words; very short sentences (3–6 words); lots of repeated sentence patterns; one simple idea; present tense only',
+  },
   1: {
     wordCount: '50 to 80 words total, in 2 short paragraphs',
     complexity:
@@ -92,6 +97,9 @@ Return STRICT JSON only, no markdown fences, in this shape:
     throw new Error('AI returned malformed story');
   }
 
+  const AI_COVERS = ['sun', 'snail-garden', 'drawing', 'telescope'];
+  const AI_ACCENTS = ['#d99a2b', '#5f8a4d', '#7a4a9a', '#3d3a6e'];
+
   const story: Story = {
     id: `ai-${language}-${Date.now()}`,
     language,
@@ -104,6 +112,8 @@ Return STRICT JSON only, no markdown fences, in this shape:
       options: c.options.map((o: any) => String(o)),
       correctIndex: Number(c.correctIndex) | 0,
     })),
+    cover: AI_COVERS[tier] ?? 'drawing',
+    accent: AI_ACCENTS[tier] ?? '#7a4a9a',
     source: 'ai',
   };
   return story;

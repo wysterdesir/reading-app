@@ -1,5 +1,5 @@
 export type Language = 'en' | 'fr' | 'es';
-export type Tier = 1 | 2 | 3;
+export type Tier = 0 | 1 | 2 | 3;
 export type ThemeName = 'cream' | 'light' | 'night' | 'contrast';
 
 export interface CompQuestion {
@@ -16,7 +16,7 @@ export interface Story {
   paragraphs: string[];
   wordCount: number;
   comprehension: CompQuestion[];
-  emoji?: string;
+  cover: string;
   accent?: string;
   source?: 'bundled' | 'ai';
 }
@@ -78,4 +78,11 @@ export const THEMES: { name: ThemeName; label: string; hint: string }[] = [
   { name: 'light', label: 'Soft Light', hint: 'Bright but easy on the eyes' },
   { name: 'night', label: 'Night Reader', hint: 'For evening reading' },
   { name: 'contrast', label: 'High Contrast', hint: 'Maximum legibility' },
+];
+
+export const TIERS: { tier: Tier; label: string }[] = [
+  { tier: 0, label: 'First words' },
+  { tier: 1, label: 'Just starting' },
+  { tier: 2, label: 'Stretching' },
+  { tier: 3, label: 'Challenge' },
 ];

@@ -6,7 +6,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'fr-mochi-a-minuit',
     tier: 1,
     title: 'Mochi à minuit',
-    emoji: '🐱',
+    cover: 'cat-night',
     accent: '#7a5a3a',
     paragraphs: [
       'Tout le monde dans la maison dormait. Les lumières étaient éteintes, et les rideaux étaient tirés. Mochi le chaton ouvrit ses grands yeux verts. C’était l’heure de son aventure secrète de minuit.',
@@ -38,7 +38,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'fr-le-bateau-en-papier',
     tier: 2,
     title: 'Le bateau en papier',
-    emoji: '⛵',
+    cover: 'paper-boat',
     accent: '#3a6a9a',
     paragraphs: [
       'Quand la pluie s’arrêta enfin, Théo sortit dehors avec ses bottes jaunes toutes neuves et un petit bateau en papier plié. Le bateau avait une grande voile bleue, dessinée avec soin au feutre par sa grand-mère. La rue était pleine de flaques, mais Théo avait un plan bien plus grand en tête.',
@@ -72,7 +72,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'fr-la-lunette-de-papi',
     tier: 2,
     title: 'La lunette de Papi',
-    emoji: '🔭',
+    cover: 'telescope',
     accent: '#3d3a6e',
     paragraphs: [
       'C’était la nuit préférée de Maya dans toute l’année. Chaque mois de juillet, elle dormait chez Papi, dans sa petite maison sur la colline, et ils faisaient toujours la même chose merveilleuse ensemble.',
@@ -114,7 +114,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'fr-lapprenti-du-phare',
     tier: 3,
     title: 'L’apprenti du phare',
-    emoji: '💡',
+    cover: 'lighthouse',
     accent: '#a85d2e',
     paragraphs: [
       'Sam visitait le vieux phare chaque été. Le gardien, monsieur Brennan, avait des sourcils blancs et broussailleux, des yeux bruns très gentils, et un rire qui ressemblait un peu au grincement d’une porte. Il gardait la grande lumière allumée depuis trente-six ans.',
@@ -153,7 +153,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'fr-le-renard-et-la-moufle',
     tier: 1,
     title: 'Le renard et la moufle',
-    emoji: '🦊',
+    cover: 'fox-snow',
     accent: '#b86a4d',
     paragraphs: [
       'Il neigeait doucement dans la forêt. Une petite renarde rousse, qui s’appelait Pim, cherchait quelque chose à manger. Ses pattes laissaient de petites traces dans la neige toute fraîche.',
@@ -191,7 +191,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'fr-lescargot-du-jardin',
     tier: 1,
     title: 'L’escargot du jardin',
-    emoji: '🌱',
+    cover: 'snail-garden',
     accent: '#5f8a4d',
     paragraphs: [
       'Lila adorait le jardin de sa grand-mère. Il y avait des fraises, des tomates rouges, et de grands tournesols jaunes qui tournaient leur visage pour suivre le soleil.',
@@ -222,7 +222,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'fr-le-dessin-qui-prend-vie',
     tier: 2,
     title: 'Le dessin qui prend vie',
-    emoji: '🎨',
+    cover: 'drawing',
     accent: '#7a4a9a',
     paragraphs: [
       'C’était un samedi pluvieux, et Ben n’avait rien à faire. Il était assis à la table de la cuisine avec son vieux crayon en bois et une feuille blanche toute neuve. Dehors, la pluie tapait contre la vitre comme un tambour endormi.',
@@ -260,7 +260,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'fr-une-bouteille-a-la-mer',
     tier: 3,
     title: 'Une bouteille à la mer',
-    emoji: '💌',
+    cover: 'bottle-sea',
     accent: '#3590a8',
     paragraphs: [
       'Sofia vivait dans une petite ville au bord de la mer, avec des rues en pente, des maisons blanches et des volets bleu vif. Chaque matin avant l’école, elle descendait jusqu’au port pour regarder l’eau.',
@@ -299,6 +299,87 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
           'Son oncle, pour rire',
         ],
         correctIndex: 1,
+      },
+    ],
+  },
+  {
+    id: 'fr-mon-petit-chien',
+    tier: 0,
+    title: 'Mon petit chien',
+    cover: 'dog',
+    accent: '#9a7b4f',
+    paragraphs: [
+      'J’ai un petit chien. Il s’appelle Tache.',
+      'Tache est brun et blanc. Il a des oreilles douces et une queue joyeuse.',
+      'Tache peut courir. Tache peut sauter. Tache peut s’asseoir quand je le demande.',
+      'Il aime jouer dans le parc. Il aime jouer avec moi.',
+      'La nuit, Tache dort sur mon lit. Il est chaud et doux.',
+      'J’aime mon petit chien. Et mon petit chien m’aime.',
+    ],
+    comprehension: [
+      {
+        q: 'Comment s’appelle le chien ?',
+        options: ['Tache', 'Max', 'Filou'],
+        correctIndex: 0,
+      },
+      {
+        q: 'Où dort Tache la nuit ?',
+        options: ['Dans le parc', 'Sur mon lit', 'Dans une boîte'],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    id: 'fr-la-grosse-pomme-rouge',
+    tier: 0,
+    title: 'La grosse pomme rouge',
+    cover: 'apple',
+    accent: '#b1493f',
+    paragraphs: [
+      'Voici une grosse pomme rouge. La pomme est ronde et brillante.',
+      'La pomme est sucrée. Elle sent très bon.',
+      'Maman coupe la pomme avec un couteau. Maintenant il y a quatre morceaux.',
+      'Elle me donne un morceau. Elle donne un morceau à papa.',
+      'Elle donne un morceau à ma sœur. Elle garde un morceau aussi.',
+      'Nous mangeons la pomme tous ensemble. La grosse pomme rouge est délicieuse.',
+    ],
+    comprehension: [
+      {
+        q: 'De quelle couleur est la pomme ?',
+        options: ['Verte', 'Rouge', 'Jaune'],
+        correctIndex: 1,
+      },
+      {
+        q: 'Combien de morceaux maman a-t-elle coupés ?',
+        options: ['Deux', 'Quatre', 'Six'],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    id: 'fr-une-journee-de-soleil',
+    tier: 0,
+    title: 'Une journée de soleil',
+    cover: 'sun',
+    accent: '#d99a2b',
+    paragraphs: [
+      'Aujourd’hui, il fait beau. Le ciel est grand et bleu.',
+      'Le soleil est chaud et brillant. Je me sens heureux.',
+      'Je mets mon chapeau. Je sors pour jouer.',
+      'Je cours sur l’herbe verte et douce. Je saute très haut.',
+      'Un petit oiseau chante dans un arbre. L’oiseau a l’air content.',
+      'Je chante avec l’oiseau. Quelle belle journée de soleil !',
+    ],
+    comprehension: [
+      {
+        q: 'Quel temps fait-il aujourd’hui ?',
+        options: ['Il pleut', 'Il fait beau', 'Il neige'],
+        correctIndex: 1,
+      },
+      {
+        q: 'Qui chante dans l’arbre ?',
+        options: ['Un oiseau', 'Un chat', 'Le vent'],
+        correctIndex: 0,
       },
     ],
   },

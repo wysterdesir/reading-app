@@ -198,8 +198,9 @@ function UnlockedDashboard({ onBack }: Props) {
             <span className="muted" style={{ fontSize: '0.85rem' }}>Default speed (wpm)</span>
             <input
               type="number"
-              min={60}
-              max={180}
+              min={30}
+              max={160}
+              step={5}
               value={settings.defaultSpeedWpm}
               onChange={(e) => update({ defaultSpeedWpm: Number(e.target.value) })}
             />
@@ -227,6 +228,7 @@ function UnlockedDashboard({ onBack }: Props) {
               }
             >
               <option value="">No override</option>
+              <option value="0">First words</option>
               <option value="1">Just starting</option>
               <option value="2">Stretching</option>
               <option value="3">Challenge</option>

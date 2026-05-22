@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import type { SessionResult, Story } from '../types';
 import { useProgress } from '../state/ProgressContext';
+import { BookCover } from '../components/BookCover';
 
 interface Props {
   result: SessionResult;
@@ -26,16 +27,13 @@ export function Result({ result, story, onReread, onNewStory, onHome }: Props) {
   const [answers, setAnswers] = useState<number[]>([]);
 
   const prevBest = progress.personalBests[story.id];
+  const priorReads = progress.sessions.filter((s) => s.storyId === story.id).length;
   const submitted = step === 'done';
   const accent = story.accent ?? 'var(--accent)';
   const praise = useMemo(() => PRAISE[Math.floor(Math.random() * PRAISE.length)], []);
 
   const recordWith = (correct: number) => {
-    recordSession({
-      ...result,
-      compCorrect: correct,
-      compTotal: story.comprehension.length,
-    });
+    recordSession({ ...result, compCorrect: correct, compTotal: story.comprehension.length });
   };
 
   const handleAnswer = (choiceIdx: number) => {
@@ -73,9 +71,7 @@ export function Result({ result, story, onReread, onNewStory, onHome }: Props) {
           <div style={{ fontWeight: 600, fontSize: '1.2rem' }}>{q.q}</div>
           <div className="comp-q">
             {q.options.map((opt, i) => (
-              <button key={i} onClick={() => handleAnswer(i)}>
-                {opt}
-              </button>
+              <button key={i} onClick={() => handleAnswer(i)}>{opt}</button>
             ))}
           </div>
         </div>
@@ -91,28 +87,29 @@ export function Result({ result, story, onReread, onNewStory, onHome }: Props) {
   const isNewBest = !prevBest || result.wpm > prevBest.wpm;
   const minutes = Math.floor(result.durationSec / 60);
   const seconds = Math.floor(result.durationSec % 60);
-  const timeLabel =
-    minutes > 0 ? `${minutes} min ${seconds} sec` : `${seconds} seconds`;
+  const timeLabel = minutes > 0 ? `${minutes} min ${seconds} sec` : `${seconds} seconds`;
 
   return (
     <div className="screen stack">
       <div className="row between">
         <button className="ghost" onClick={onHome}>← Home</button>
-        <div className="muted">{story.emoji} {story.title}</div>
+        <div className="muted">{story.title}</div>
         <div style={{ width: 70 }} />
       </div>
 
       <div className="card stack" style={{ textAlign: 'center', borderTop: `4px solid ${accent}` }}>
-        <div style={{ fontSize: '3rem' }}>{story.emoji}</div>
+        <div className="result__cover" style={{ ['--accent' as any]: accent }}>
+          <BookCover cover={story.cover} />
+        </div>
         <div className="muted">{praise}</div>
         <div className="result__big">
-          {isNewBest && submitted ? '⭐ Personal best ⭐' : 'Story complete'}
+          {isNewBest && submitted ? 'New personal best' : 'Story complete'}
         </div>
         <div className="row" style={{ justifyContent: 'center', flexWrap: 'wrap', gap: '0.6rem' }}>
-          <div className="chip">📖 {result.totalWords} words</div>
-          <div className="chip">⏱ {timeLabel}</div>
+          <div className="chip">{result.totalWords} words</div>
+          <div className="chip">{timeLabel}</div>
           {hasComp && submitted && (
-            <div className="chip">💭 {correctSoFar}/{story.comprehension.length} questions</div>
+            <div className="chip">{correctSoFar}/{story.comprehension.length} questions</div>
           )}
         </div>
       </div>
@@ -120,12 +117,13 @@ export function Result({ result, story, onReread, onNewStory, onHome }: Props) {
       <div className="card stack-sm" style={{ borderLeft: `4px solid ${accent}` }}>
         <div style={{ fontWeight: 600 }}>Read it again?</div>
         <p className="muted" style={{ margin: 0, fontSize: '0.9rem' }}>
-          Reading the same story twice is one of the best ways to grow as a
-          reader. The tricky words feel easier each time.
+          {priorReads >= 1
+            ? `You've read this story ${priorReads + 1} times now — and it gets smoother every single time.`
+            : 'Reading the same story twice is one of the best ways to grow as a reader. The tricky words feel easier the second time.'}
         </p>
         <div className="row">
-          <button className="primary" onClick={onReread}>↻ Read it again</button>
-          <button onClick={onNewStory}>Pick a different story</button>
+          <button className="primary" onClick={onReread}>Read it again</button>
+          <button onClick={onNewStory}>Pick a different book</button>
         </div>
       </div>
     </div>

@@ -71,7 +71,7 @@ function ensureSettingsShape(s: Partial<Settings>): Settings {
     version: 1,
     language: s.language ?? 'en',
     theme: s.theme ?? 'cream',
-    defaultSpeedWpm: s.defaultSpeedWpm ?? 100,
+    defaultSpeedWpm: s.defaultSpeedWpm ?? 60,
     maxSessionMinutes: s.maxSessionMinutes ?? 20,
     parentPinHash: s.parentPinHash,
     anthropicApiKey: s.anthropicApiKey,

@@ -6,7 +6,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'en-mochi-at-midnight',
     tier: 1,
     title: 'Mochi at Midnight',
-    emoji: '🐱',
+    cover: 'cat-night',
     accent: '#7a5a3a',
     paragraphs: [
       'Everyone in the house was asleep. The lights were off, and the curtains were drawn. Mochi the kitten opened her bright green eyes. It was time for her secret midnight adventure.',
@@ -38,7 +38,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'en-the-paper-boat',
     tier: 2,
     title: 'The Paper Boat',
-    emoji: '⛵',
+    cover: 'paper-boat',
     accent: '#3a6a9a',
     paragraphs: [
       'After the rain finally stopped, Theo went outside with his new yellow boots and a small folded paper boat. The boat had a tall blue sail, drawn carefully in marker by his grandmother. The street was full of puddles, but Theo had a much bigger plan in mind.',
@@ -72,7 +72,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'en-granddads-telescope',
     tier: 2,
     title: 'Granddad’s Telescope',
-    emoji: '🔭',
+    cover: 'telescope',
     accent: '#3d3a6e',
     paragraphs: [
       'It was Maya’s favorite night of the whole year. Every July, she stayed at Granddad’s little house on the hill, and they always did the same wonderful thing together.',
@@ -114,7 +114,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'en-the-lighthouse-apprentice',
     tier: 3,
     title: 'The Lighthouse Apprentice',
-    emoji: '💡',
+    cover: 'lighthouse',
     accent: '#a85d2e',
     paragraphs: [
       'Sam visited the old lighthouse every summer. The keeper, Mr. Brennan, had bushy white eyebrows, kind brown eyes, and a laugh that sounded a little like a creaking door. He had been keeping the great light shining for thirty-six years.',
@@ -153,7 +153,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'en-the-fox-and-the-mitten',
     tier: 1,
     title: 'The Fox and the Mitten',
-    emoji: '🦊',
+    cover: 'fox-snow',
     accent: '#b86a4d',
     paragraphs: [
       'It was snowing softly in the forest. A small red fox named Pim was looking for something to eat. Her paws made little prints in the fresh white snow.',
@@ -191,7 +191,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'en-the-garden-snail',
     tier: 1,
     title: 'The Garden Snail',
-    emoji: '🌱',
+    cover: 'snail-garden',
     accent: '#5f8a4d',
     paragraphs: [
       'Lila loved her grandmother’s garden. There were strawberries, red tomatoes, and tall yellow sunflowers that turned their faces to follow the sun.',
@@ -222,7 +222,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'en-the-drawing-that-came-alive',
     tier: 2,
     title: 'The Drawing That Came Alive',
-    emoji: '🎨',
+    cover: 'drawing',
     accent: '#7a4a9a',
     paragraphs: [
       'It was a rainy Saturday, and Ben had nothing to do. He sat at the kitchen table with his old wooden pencil and a fresh sheet of white paper. Outside, the rain pattered against the window like a sleepy drum.',
@@ -256,7 +256,7 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
     id: 'en-a-bottle-at-sea',
     tier: 3,
     title: 'A Bottle at Sea',
-    emoji: '💌',
+    cover: 'bottle-sea',
     accent: '#3590a8',
     paragraphs: [
       'Sofia lived in a small town by the sea, with steep streets and white houses and bright blue shutters. Every morning before school, she would walk down to the harbor to look at the water.',
@@ -295,6 +295,87 @@ const raw: Omit<Story, 'wordCount' | 'language' | 'source'>[] = [
           'Her uncle, as a joke',
         ],
         correctIndex: 1,
+      },
+    ],
+  },
+  {
+    id: 'en-my-little-dog',
+    tier: 0,
+    title: 'My Little Dog',
+    cover: 'dog',
+    accent: '#9a7b4f',
+    paragraphs: [
+      'I have a little dog. His name is Spot.',
+      'Spot is brown and white. He has soft ears and a happy tail.',
+      'Spot can run. Spot can jump. Spot can sit when I ask him.',
+      'He likes to play in the park. He likes to play with me.',
+      'At night, Spot sleeps on my bed. He is warm and soft.',
+      'I love my little dog. And my little dog loves me.',
+    ],
+    comprehension: [
+      {
+        q: 'What is the dog’s name?',
+        options: ['Spot', 'Sam', 'Max'],
+        correctIndex: 0,
+      },
+      {
+        q: 'Where does Spot sleep at night?',
+        options: ['In the park', 'On my bed', 'In a box'],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    id: 'en-the-big-red-apple',
+    tier: 0,
+    title: 'The Big Red Apple',
+    cover: 'apple',
+    accent: '#b1493f',
+    paragraphs: [
+      'Here is a big red apple. The apple is round and shiny.',
+      'The apple is sweet. It smells very good.',
+      'Mom cuts the apple with a knife. Now there are four pieces.',
+      'She gives me a piece. She gives Dad a piece.',
+      'She gives my sister a piece. She keeps one piece too.',
+      'We all eat the apple together. The big red apple is yummy.',
+    ],
+    comprehension: [
+      {
+        q: 'What color is the apple?',
+        options: ['Green', 'Red', 'Yellow'],
+        correctIndex: 1,
+      },
+      {
+        q: 'How many pieces did Mom cut?',
+        options: ['Two', 'Four', 'Six'],
+        correctIndex: 1,
+      },
+    ],
+  },
+  {
+    id: 'en-a-sunny-day',
+    tier: 0,
+    title: 'A Sunny Day',
+    cover: 'sun',
+    accent: '#d99a2b',
+    paragraphs: [
+      'Today is a sunny day. The sky is big and blue.',
+      'The sun is warm and bright. I feel happy.',
+      'I put on my hat. I go outside to play.',
+      'I run on the soft green grass. I jump up high.',
+      'A little bird sings in a tree. The bird sounds happy too.',
+      'I sing with the bird. What a nice, sunny day!',
+    ],
+    comprehension: [
+      {
+        q: 'What is the weather like today?',
+        options: ['Rainy', 'Sunny', 'Snowy'],
+        correctIndex: 1,
+      },
+      {
+        q: 'What sings in the tree?',
+        options: ['A bird', 'A cat', 'The wind'],
+        correctIndex: 0,
       },
     ],
   },
