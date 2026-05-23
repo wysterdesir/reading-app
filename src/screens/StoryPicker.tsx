@@ -38,10 +38,12 @@ export function StoryPicker({ onBack, onPick }: Props) {
     [aiStories, settings.language]
   );
 
-  const filtered = useMemo(
-    () => (filterTier == null ? allStories : allStories.filter((s) => s.tier === filterTier)),
-    [allStories, filterTier]
-  );
+  const filtered = useMemo(() => {
+    const list = filterTier == null ? allStories : allStories.filter((s) => s.tier === filterTier);
+    // Easiest tier on top, hardest at the bottom. Stable sort keeps current
+    // intra-tier order (and AI-generated stories first within their tier).
+    return [...list].sort((a, b) => a.tier - b.tier);
+  }, [allStories, filterTier]);
 
   const shelves = useMemo(() => chunk(filtered, 3), [filtered]);
 

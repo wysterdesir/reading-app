@@ -1,4 +1,4 @@
-# Story Reader
+# Starator Reader
 
 A free, browser-based reading-practice app for a 7-year-old reading aloud
 in English, French, and Spanish. Teleprompter-style scrolling, live word

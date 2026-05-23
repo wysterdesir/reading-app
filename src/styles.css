@@ -243,17 +243,25 @@ a {
   top: 0;
   left: 0;
   right: 0;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  justify-content: space-between;
   padding: 0.6rem 1rem;
-  z-index: 10;
   gap: 0.5rem;
+  z-index: 10;
   pointer-events: none;
 }
 
 .reader__topbar > * {
   pointer-events: auto;
+}
+
+.reader__topbar > :first-child {
+  justify-self: start;
+}
+
+.reader__topbar > :last-child {
+  justify-self: end;
 }
 
 .reader__center {
@@ -386,14 +394,14 @@ a {
   transition: height 0.3s ease-out;
 }
 
-/* Centered pause control */
-.reader__pause-fab {
+/* Unified right-edge action FAB — same spot for Start, Pause, Resume */
+.reader__fab {
   position: fixed;
-  left: 50%;
-  top: 54%;
-  transform: translate(-50%, -50%);
-  width: 80px;
-  height: 80px;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 88px;
+  height: 88px;
   border-radius: 999px;
   background: var(--story-accent);
   color: var(--bg);
@@ -401,19 +409,27 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0.34;
-  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.26);
   z-index: 7;
   transition: opacity 0.18s ease, transform 0.08s ease;
 }
 
-.reader__pause-fab:hover {
-  opacity: 0.95;
-  background: var(--story-accent);
+.reader__fab.is-start,
+.reader__fab.is-resume {
+  /* nudge the play triangle so it looks centered */
+  padding-left: 6px;
 }
 
-.reader__pause-fab:active {
-  transform: translate(-50%, -50%) scale(0.94);
+.reader__fab.is-pause {
+  opacity: 0.36;
+}
+
+.reader__fab:hover {
+  opacity: 0.95;
+}
+
+.reader__fab:active {
+  transform: translateY(-50%) scale(0.95);
 }
 
 .reader__paused {
@@ -421,33 +437,20 @@ a {
   inset: 0;
   background: rgba(0, 0, 0, 0.58);
   backdrop-filter: blur(2px);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 1.1rem;
   z-index: 9;
   cursor: pointer;
 }
 
-.reader__resume {
-  width: 116px;
-  height: 116px;
-  border-radius: 999px;
-  background: var(--story-accent);
-  color: #fff;
-  border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-left: 8px;
-  box-shadow: 0 10px 34px rgba(0, 0, 0, 0.4);
-}
-
 .reader__paused-label {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   color: #fff;
   font-family: var(--font-ui);
-  font-size: 1.05rem;
+  font-size: 1.1rem;
+  text-align: center;
+  pointer-events: none;
 }
 
 .reader__speed {

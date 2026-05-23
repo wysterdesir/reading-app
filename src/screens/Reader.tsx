@@ -130,10 +130,8 @@ export function Reader({ story, onFinish, onExit }: Props) {
           </div>
         </div>
         <div className="reader__controls">
-          {started ? (
+          {started && (
             <button onClick={handleFinish} title="Finish reading">Done</button>
-          ) : (
-            <button className="primary" onClick={begin}>Start reading</button>
           )}
         </div>
       </div>
@@ -176,25 +174,26 @@ export function Reader({ story, onFinish, onExit }: Props) {
         <div className="reader__vprogress-fill" style={{ height: `${progressPct}%` }} />
       </div>
 
-      {/* Centered pause control — large, thumb-reachable */}
+      {/* Right-edge action FAB — Start / Pause / Resume all share the same spot */}
+      {!started && (
+        <button className="reader__fab is-start" onClick={begin} aria-label="Start reading">
+          <svg viewBox="0 0 24 24" width="38" height="38" aria-hidden="true">
+            <path d="M7 4 L20 12 L7 20 Z" fill="currentColor" />
+          </svg>
+        </button>
+      )}
       {started && !paused && (
-        <button
-          className="reader__pause-fab"
-          onClick={togglePause}
-          aria-label="Pause"
-        >
-          <svg viewBox="0 0 24 24" width="34" height="34" aria-hidden="true">
+        <button className="reader__fab is-pause" onClick={togglePause} aria-label="Pause">
+          <svg viewBox="0 0 24 24" width="32" height="32" aria-hidden="true">
             <rect x="5" y="4" width="5" height="16" rx="2" fill="currentColor" />
             <rect x="14" y="4" width="5" height="16" rx="2" fill="currentColor" />
           </svg>
         </button>
       )}
-
-      {/* Paused overlay */}
       {started && paused && (
         <div className="reader__paused" onClick={togglePause}>
-          <button className="reader__resume" aria-label="Resume reading">
-            <svg viewBox="0 0 24 24" width="44" height="44" aria-hidden="true">
+          <button className="reader__fab is-resume" aria-label="Resume reading">
+            <svg viewBox="0 0 24 24" width="38" height="38" aria-hidden="true">
               <path d="M7 4 L20 12 L7 20 Z" fill="currentColor" />
             </svg>
           </button>

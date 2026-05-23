@@ -45,9 +45,9 @@ export function Home({ onStart, onOpenParent }: Props) {
   return (
     <div className="screen stack">
       <div className="row between">
-        <h1>Story Reader</h1>
-        <button className="ghost" onClick={onOpenParent}>
-          Parent
+        <h1>Starator Reader</h1>
+        <button className="icon ghost" onClick={onOpenParent} aria-label="Parent settings">
+          ⚙
         </button>
       </div>
 
