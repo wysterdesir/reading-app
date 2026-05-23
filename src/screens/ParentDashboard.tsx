@@ -4,6 +4,7 @@ import { useProgress } from '../state/ProgressContext';
 import { exportProgressJson, importProgressJson } from '../lib/storage';
 import { sha256 } from '../lib/hash';
 import { generateQR } from '../lib/qr';
+import { playChime, unlockAudio } from '../lib/sound';
 import { LANGUAGES, type Language, type Tier } from '../types';
 
 interface Props {
@@ -235,6 +236,29 @@ function UnlockedDashboard({ onBack }: Props) {
             </select>
           </label>
         </div>
+        <div className="row" style={{ gap: '1.2rem', flexWrap: 'wrap' }}>
+          <label className="stack-sm">
+            <span className="muted" style={{ fontSize: '0.85rem' }}>Weekly goal (minutes)</span>
+            <input
+              type="number"
+              min={10}
+              max={300}
+              step={5}
+              value={settings.weeklyGoalMinutes}
+              onChange={(e) => update({ weeklyGoalMinutes: Number(e.target.value) })}
+            />
+          </label>
+          <label className="stack-sm">
+            <span className="muted" style={{ fontSize: '0.85rem' }}>Child's name (for certificates)</span>
+            <input
+              type="text"
+              value={settings.childName ?? ''}
+              onChange={(e) => update({ childName: e.target.value || undefined })}
+              placeholder="Optional"
+              style={{ minWidth: 180 }}
+            />
+          </label>
+        </div>
         <label className="row" style={{ gap: '0.5rem' }}>
           <input
             type="checkbox"
@@ -242,6 +266,21 @@ function UnlockedDashboard({ onBack }: Props) {
             onChange={(e) => update({ ttsPreviewByDefault: e.target.checked })}
           />
           <span>Show "hear a sample" preview on every story</span>
+        </label>
+        <label className="row" style={{ gap: '0.5rem' }}>
+          <input
+            type="checkbox"
+            checked={settings.soundEnabled}
+            onChange={(e) => update({ soundEnabled: e.target.checked })}
+          />
+          <span>Soft chime when she finishes a story</span>
+          <button
+            className="ghost"
+            style={{ fontSize: '0.8rem', padding: '0.2em 0.6em' }}
+            onClick={() => { unlockAudio(); playChime(); }}
+          >
+            Play sample
+          </button>
         </label>
       </div>
 

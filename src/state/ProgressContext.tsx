@@ -14,6 +14,8 @@ interface Ctx {
   recordSession: (r: SessionResult) => void;
   replaceProgress: (p: Progress) => void;
   resetProgress: () => void;
+  toggleFavorite: (storyId: string) => void;
+  isFavorite: (storyId: string) => boolean;
 }
 
 const ProgressCtx = createContext<Ctx | null>(null);
@@ -107,12 +109,30 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
       totalWordsRead: { en: 0, fr: 0, es: 0 },
       totalMinutesRead: { en: 0, fr: 0, es: 0 },
       storiesCompleted: { en: 0, fr: 0, es: 0 },
+      favorites: [],
     });
   }, []);
 
+  const toggleFavorite = useCallback((storyId: string) => {
+    setProgress((prev) => {
+      const has = prev.favorites.includes(storyId);
+      return {
+        ...prev,
+        favorites: has
+          ? prev.favorites.filter((id) => id !== storyId)
+          : [...prev.favorites, storyId],
+      };
+    });
+  }, []);
+
+  const isFavorite = useCallback(
+    (storyId: string) => progress.favorites.includes(storyId),
+    [progress.favorites]
+  );
+
   const value = useMemo<Ctx>(
-    () => ({ progress, recordSession, replaceProgress, resetProgress }),
-    [progress, recordSession, replaceProgress, resetProgress]
+    () => ({ progress, recordSession, replaceProgress, resetProgress, toggleFavorite, isFavorite }),
+    [progress, recordSession, replaceProgress, resetProgress, toggleFavorite, isFavorite]
   );
 
   return <ProgressCtx.Provider value={value}>{children}</ProgressCtx.Provider>;

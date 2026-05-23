@@ -9,6 +9,7 @@ import {
 import type { SessionResult, Story } from '../types';
 import { tokenizeStory } from '../lib/words';
 import { useSettings } from '../state/SettingsContext';
+import { playChime, unlockAudio } from '../lib/sound';
 
 interface Props {
   story: Story;
@@ -48,10 +49,13 @@ export function Reader({ story, onFinish, onExit }: Props) {
   }, [story, totalWords]);
 
   const begin = useCallback(() => {
+    // Unlock the AudioContext now — browsers require a user gesture before
+    // any sound can play. The chime at story end will then be allowed.
+    if (settings.soundEnabled) unlockAudio();
     setStarted(true);
     setPaused(false);
     startedAtRef.current = performance.now() - elapsedMs;
-  }, [elapsedMs]);
+  }, [elapsedMs, settings.soundEnabled]);
 
   const togglePause = useCallback(() => {
     setPaused((p) => {
@@ -67,6 +71,7 @@ export function Reader({ story, onFinish, onExit }: Props) {
   const handleFinish = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
+    if (settings.soundEnabled) playChime();
     const durationSec = Math.max(elapsedRef.current / 1000, 1);
     const wpm = (totalWords / durationSec) * 60;
     onFinish({
@@ -80,7 +85,7 @@ export function Reader({ story, onFinish, onExit }: Props) {
       compTotal: story.comprehension.length,
       timestamp: Date.now(),
     });
-  }, [totalWords, story, onFinish]);
+  }, [totalWords, story, onFinish, settings.soundEnabled]);
 
   const handleFinishRef = useRef(handleFinish);
   useEffect(() => { handleFinishRef.current = handleFinish; }, [handleFinish]);

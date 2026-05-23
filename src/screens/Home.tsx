@@ -1,6 +1,9 @@
+import { useState } from 'react';
 import { useSettings } from '../state/SettingsContext';
 import { useProgress } from '../state/ProgressContext';
 import { Logo } from '../components/Logo';
+import { Certificate } from './Certificate';
+import { getMinutesThisWeek } from '../lib/week';
 import { LANGUAGES, THEMES, type Language } from '../types';
 
 interface Props {
@@ -8,21 +11,31 @@ interface Props {
   onOpenParent: () => void;
 }
 
+interface Milestone {
+  id: string;
+  label: string;
+  unlocked: boolean;
+}
+
 export function Home({ onStart, onOpenParent }: Props) {
   const { settings, update } = useSettings();
   const { progress } = useProgress();
+  const [activeCert, setActiveCert] = useState<Milestone | null>(null);
 
   const streak = progress.streak.days;
-  const minutesAllLangs = (Object.values(progress.totalMinutesRead) as number[]).reduce(
-    (a, b) => a + b,
-    0
-  );
   const storiesRead = (Object.values(progress.storiesCompleted) as number[]).reduce(
     (a, b) => a + b,
     0
   );
+  const minutesAllLangs = (Object.values(progress.totalMinutesRead) as number[]).reduce(
+    (a, b) => a + b,
+    0
+  );
+  const weekMinutes = getMinutesThisWeek(progress);
+  const goal = settings.weeklyGoalMinutes;
+  const weekPct = Math.min(100, (weekMinutes / Math.max(1, goal)) * 100);
 
-  const milestones = [
+  const milestones: Milestone[] = [
     { id: 'first', label: 'First story', unlocked: storiesRead >= 1 },
     { id: 'three', label: '3 stories', unlocked: storiesRead >= 3 },
     { id: 'ten', label: '10 stories', unlocked: storiesRead >= 10 },
@@ -84,9 +97,15 @@ export function Home({ onStart, onOpenParent }: Props) {
           <div className="muted stat-unit">all languages</div>
         </div>
         <div className="card stat-card">
-          <div className="muted stat-label">Minutes</div>
-          <div className="stat-value">{Math.round(minutesAllLangs)}</div>
-          <div className="muted stat-unit">time reading</div>
+          <div className="muted stat-label">This week</div>
+          <div className="stat-value">
+            {Math.round(weekMinutes)}
+            <span className="stat-value-sub">/{goal}</span>
+          </div>
+          <div className="muted stat-unit">minutes</div>
+          <div className="weekly-bar" aria-hidden="true">
+            <div className="weekly-bar__fill" style={{ width: `${weekPct}%` }} />
+          </div>
         </div>
       </div>
 
@@ -108,14 +127,25 @@ export function Home({ onStart, onOpenParent }: Props) {
 
       <div className="card stack-sm">
         <div className="muted" style={{ fontSize: '0.85rem' }}>
-          Badges — {earned} of {milestones.length} earned
+          Badges — {earned} of {milestones.length} earned · tap an earned one to print
         </div>
         <div className="badge-row">
-          {milestones.map((m) => (
-            <div key={m.id} className={`badge ${m.unlocked ? 'earned' : 'locked'}`}>
-              {m.label}
-            </div>
-          ))}
+          {milestones.map((m) =>
+            m.unlocked ? (
+              <button
+                key={m.id}
+                className="badge earned"
+                onClick={() => setActiveCert(m)}
+                aria-label={`View certificate for ${m.label}`}
+              >
+                {m.label}
+              </button>
+            ) : (
+              <div key={m.id} className="badge locked">
+                {m.label}
+              </div>
+            )
+          )}
         </div>
       </div>
 
@@ -128,6 +158,14 @@ export function Home({ onStart, onOpenParent }: Props) {
       >
         Go to the bookshelf →
       </button>
+
+      {activeCert && (
+        <Certificate
+          badge={activeCert}
+          childName={settings.childName}
+          onClose={() => setActiveCert(null)}
+        />
+      )}
     </div>
   );
 }

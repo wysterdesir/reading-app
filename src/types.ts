@@ -53,6 +53,7 @@ export interface Progress {
   totalWordsRead: Record<Language, number>;
   totalMinutesRead: Record<Language, number>;
   storiesCompleted: Record<Language, number>;
+  favorites: string[];
 }
 
 export interface Settings {
@@ -65,6 +66,9 @@ export interface Settings {
   anthropicApiKey?: string;
   difficultyOverride: Tier | null;
   ttsPreviewByDefault: boolean;
+  weeklyGoalMinutes: number;
+  soundEnabled: boolean;
+  childName?: string;
 }
 
 export const LANGUAGES: { code: Language; label: string; native: string; bcp47: string }[] = [

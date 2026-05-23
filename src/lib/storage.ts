@@ -63,6 +63,7 @@ function ensureProgressShape(p: Partial<Progress>): Progress {
     totalWordsRead,
     totalMinutesRead,
     storiesCompleted,
+    favorites: p.favorites ?? [],
   };
 }
 
@@ -77,6 +78,9 @@ function ensureSettingsShape(s: Partial<Settings>): Settings {
     anthropicApiKey: s.anthropicApiKey,
     difficultyOverride: s.difficultyOverride ?? null,
     ttsPreviewByDefault: s.ttsPreviewByDefault ?? true,
+    weeklyGoalMinutes: s.weeklyGoalMinutes ?? 30,
+    soundEnabled: s.soundEnabled ?? true,
+    childName: s.childName,
   };
 }
 

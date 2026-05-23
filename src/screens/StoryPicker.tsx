@@ -26,7 +26,7 @@ function chunk<T>(arr: T[], size: number): T[][] {
 
 export function StoryPicker({ onBack, onPick }: Props) {
   const { settings } = useSettings();
-  const { progress } = useProgress();
+  const { progress, toggleFavorite, isFavorite } = useProgress();
   const [filterTier, setFilterTier] = useState<Tier | null>(settings.difficultyOverride);
   const [previewing, setPreviewing] = useState<string | null>(null);
   const [generating, setGenerating] = useState(false);
@@ -130,6 +130,25 @@ export function StoryPicker({ onBack, onPick }: Props) {
                         {reads > 0 && <div className="book__ribbon" title="You have read this" />}
                       </div>
                       <div className="book__pages" />
+                      <button
+                        className="book__fav"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFavorite(s.id);
+                        }}
+                        aria-label={isFavorite(s.id) ? 'Remove from favorites' : 'Add to favorites'}
+                        aria-pressed={isFavorite(s.id)}
+                      >
+                        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                          <path
+                            d="M12 2.5 L14.6 9.3 L22 9.3 L16 14 L18.3 21 L12 16.8 L5.7 21 L8 14 L2 9.3 L9.4 9.3 Z"
+                            fill={isFavorite(s.id) ? '#e7b541' : 'none'}
+                            stroke={isFavorite(s.id) ? '#a07a1c' : '#ffffff'}
+                            strokeWidth={isFavorite(s.id) ? 1.4 : 1.8}
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      </button>
                     </div>
                     <div className="book__stats">
                       <span className={`tier-dot t${s.tier}`} />

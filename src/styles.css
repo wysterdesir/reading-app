@@ -813,3 +813,175 @@ a {
 .spacer {
   flex: 1;
 }
+
+/* ===== Favorites star on book ===== */
+.book__fav {
+  position: absolute;
+  top: 6px;
+  left: 14px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 6;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.4));
+  transition: transform 0.12s ease;
+}
+
+.book__fav:hover {
+  transform: scale(1.12);
+}
+
+.book__fav:active {
+  transform: scale(0.92);
+}
+
+/* ===== Weekly goal mini-bar in stat card ===== */
+.stat-value-sub {
+  font-size: 0.5em;
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+
+.weekly-bar {
+  margin-top: 0.45rem;
+  height: 5px;
+  background: var(--rule);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.weekly-bar__fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width 0.4s ease-out;
+}
+
+/* ===== Certificate overlay & printable design ===== */
+.cert-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(20, 16, 8, 0.62);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  z-index: 100;
+}
+
+.certificate {
+  background: #fbf6e9;
+  color: #2b2418;
+  border: 8px double #b58a3e;
+  border-radius: 8px;
+  padding: 2.2rem 2.4rem 1.8rem;
+  max-width: 560px;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-ui);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  position: relative;
+}
+
+.cert__decor {
+  color: #c9963a;
+  font-size: 1.4rem;
+  letter-spacing: 0.4em;
+  margin: 0.3rem 0;
+}
+
+.cert__decor--top { margin-bottom: 0.6rem; }
+.cert__decor--bottom { margin-top: 1rem; }
+
+.cert__logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.6rem;
+}
+
+.cert__kicker {
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  color: #8c5a2c;
+  margin-bottom: 0.6rem;
+}
+
+.cert__line {
+  color: #5b5240;
+  font-size: 0.95rem;
+  margin: 0.4rem 0;
+}
+
+.cert__name {
+  font-family: var(--font-ui);
+  font-style: italic;
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: #2b2418;
+  border-bottom: 1px solid rgba(43, 36, 24, 0.25);
+  padding-bottom: 0.3rem;
+  margin: 0.4rem auto 0.6rem;
+  display: inline-block;
+  min-width: 60%;
+}
+
+.cert__achievement {
+  font-size: 1.55rem;
+  font-weight: 600;
+  color: #8c5a2c;
+  margin: 0.4rem 0;
+}
+
+.cert__date {
+  color: #5b5240;
+  font-size: 0.85rem;
+  margin-top: 0.6rem;
+  font-style: italic;
+}
+
+.cert__sig {
+  color: #5b5240;
+  font-size: 0.85rem;
+  margin-top: 0.4rem;
+  font-style: italic;
+}
+
+.cert__actions {
+  display: flex;
+  justify-content: center;
+  gap: 0.6rem;
+  margin-top: 1.4rem;
+}
+
+@media print {
+  /* Hide everything by default */
+  body * { visibility: hidden; }
+  /* Show only the certificate and its contents */
+  .certificate, .certificate * { visibility: visible; }
+  /* Lift the certificate onto a clean print page */
+  .cert-overlay {
+    position: absolute !important;
+    inset: 0;
+    background: none !important;
+    backdrop-filter: none !important;
+    padding: 0;
+  }
+  .certificate {
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: none;
+    max-width: 90%;
+  }
+  .cert__actions { display: none !important; }
+}
