@@ -1,5 +1,5 @@
 /**
- * Starator Reader logo — a gold star above an open book.
+ * Starator logo — a gold star above an open book.
  * Single SVG; same artwork is reused for the favicon (public/favicon.svg)
  * and any in-app placement.
  *
@@ -12,7 +12,7 @@ interface Props {
   title?: string;
 }
 
-export function Logo({ size = 44, showBg = false, title = 'Starator Reader' }: Props) {
+export function Logo({ size = 44, showBg = false, title = 'Starator' }: Props) {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

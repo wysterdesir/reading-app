@@ -48,7 +48,7 @@ export function Home({ onStart, onOpenParent }: Props) {
       <div className="row between">
         <div className="row" style={{ gap: '0.7rem' }}>
           <Logo size={48} />
-          <h1 style={{ margin: 0 }}>Starator Reader</h1>
+          <h1 style={{ margin: 0 }}>Starator</h1>
         </div>
         <button className="icon ghost" onClick={onOpenParent} aria-label="Parent settings">
           ⚙
